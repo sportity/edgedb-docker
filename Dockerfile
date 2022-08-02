@@ -35,7 +35,7 @@ export DEBIAN_FRONTEND=noninteractive; \
 && echo deb [signed-by=/usr/local/share/keyrings/edgedb-keyring.gpg] \
   https://packages.edgedb.com/apt \
   $(grep "VERSION_CODENAME=" /etc/os-release | cut -d= -f2) main \
-  | sudo tee /etc/apt/sources.list.d/edgedb.list
+  | sudo tee /etc/apt/sources.list.d/edgedb.list \
 && ( \
     for i in $(seq 1 5); do [ $i -gt 1 ] && sleep 1; \
         apt-get update \
