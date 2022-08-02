@@ -1,6 +1,5 @@
 FROM debian:buster-slim
-ARG version
-ARG subdist
+ARG version=2.0
 
 ENV GOSU_VERSION 1.11
 
@@ -33,8 +32,10 @@ export DEBIAN_FRONTEND=noninteractive; \
 && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8\
 && curl -fsSL https://packages.edgedb.com/keys/edgedb.asc \
        -o /etc/apt/trusted.gpg.d/edgedb.asc \
-&& echo deb https://packages.edgedb.com/apt buster ${subdist:-main} \
-       >/etc/apt/sources.list.d/edgedb.list \
+&& echo deb [signed-by=/usr/local/share/keyrings/edgedb-keyring.gpg] \
+  https://packages.edgedb.com/apt \
+  $(grep "VERSION_CODENAME=" /etc/os-release | cut -d= -f2) main \
+  | sudo tee /etc/apt/sources.list.d/edgedb.list
 && ( \
     for i in $(seq 1 5); do [ $i -gt 1 ] && sleep 1; \
         apt-get update \
